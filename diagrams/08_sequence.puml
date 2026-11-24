@@ -1,0 +1,43 @@
+@startuml
+!include _style.iuml
+skinparam sequenceMessageAlign left
+autonumber
+actor Examiner
+participant "RecoveryPage" as page
+participant "JobManager" as jm
+participant "Job (QThread)" as job
+participant "Evidentia" as svc
+participant "EvidenceSource" as src
+participant "RecoveryEngine" as eng
+participant "Ledger" as led
+database "Store" as db
+
+Examiner -> page : click "Run recovery"
+page -> jm : start(title, fn)
+jm -> job : start()
+activate job
+job -> svc : run_recovery(evidence_id, options, ctx)
+activate svc
+svc -> db : insert recovery_runs (running)
+svc -> src : open(path) read-only
+svc -> src : read all blocks
+src --> svc : pre SHA-256 / MD5
+svc -> led : append("recovery.start")
+led -> db : insert ledger row
+svc -> eng : run(source, out_dir, ctx)
+activate eng
+eng -> src : read(offset, size)
+eng --> job : progress(fraction, message)
+job --> page : progressed signal
+eng --> svc : RecoveryResult
+deactivate eng
+svc -> src : read all blocks
+src --> svc : post SHA-256 / MD5
+svc -> db : insert recovered_files
+svc -> led : append("recovery.complete")
+svc --> job : run details
+deactivate svc
+job --> page : succeeded(result)
+deactivate job
+page -> Examiner : show results table
+@enduml

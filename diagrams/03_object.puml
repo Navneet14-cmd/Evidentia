@@ -1,0 +1,54 @@
+@startuml
+!include _style.iuml
+object "case1 : Case" as c {
+  id = "CASE-2026-0001"
+  title = "Demo investigation"
+  status = "open"
+}
+object "ev1 : Evidence" as e1 {
+  id = 1
+  path = "fat32.img"
+  kind = "original"
+  size = 75497472
+}
+object "ev2 : Evidence" as e2 {
+  id = 2
+  kind = "working-copy"
+  parent_id = 1
+  sanitized = 1
+}
+object "run1 : RecoveryRun" as r {
+  id = 1
+  status = "complete"
+  source_unchanged = true
+}
+object "f7 : RecoveredFile" as f1 {
+  name = "thesis.docx"
+  source = "reconstructed"
+  validation = "intact"
+  confidence = 93
+}
+object "f3 : RecoveredFile" as f2 {
+  name = "invoice.pdf"
+  detected_type = "jpeg"
+  ext_mismatch = true
+}
+object "s1 : Sanitization" as s {
+  method = "random"
+  nist_category = "Clear"
+  result = "PASS"
+}
+object "entry5 : LedgerEntry" as l {
+  seq = 5
+  action = "recovery.complete"
+  prev_hash = "9f2c...e1"
+}
+c -- e1
+c -- e2
+e1 -- e2 : copied to
+e1 -- r : input of
+r -- f1
+r -- f2
+e2 -- s : target of
+r .. l : recorded in
+@enduml

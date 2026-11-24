@@ -1,0 +1,37 @@
+@startuml
+!include _style.iuml
+start
+:Open evidence through EvidenceSource (read-only);
+:Compute pre-recovery SHA-256 and MD5;
+:Write "recovery.start" to ledger;
+if (File-system recovery enabled?) then (yes)
+  :Detect partitions (MBR / GPT);
+  :Walk each file system with The Sleuth Kit;
+  :Extract deleted entries with name, inode and MAC times;
+else (no)
+endif
+if (Carving enabled?) then (yes)
+  :Scan image in 16 MiB chunks for signature headers;
+  :Find end of each file from its structure;
+  while (more carved candidates?) is (yes)
+    :Validate structure (intact / partial / corrupt);
+    if (Corrupt and format supports bifragment search?) then (yes)
+      :Try to reconstruct around the gap;
+    else (no)
+    endif
+  endwhile (no)
+else (no)
+endif
+:Correlate carved results with file-system entries;
+:Classify content and flag extension mismatches;
+:Compute confidence score (0 - 100);
+:Hash and export each recovered file;
+:Compute post-recovery SHA-256 and MD5;
+if (pre hash = post hash?) then (yes)
+  :Mark source unchanged;
+else (no)
+  :Mark source CHANGED and warn;
+endif
+:Store run and files, write "recovery.complete";
+stop
+@enduml

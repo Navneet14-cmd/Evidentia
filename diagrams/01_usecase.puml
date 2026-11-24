@@ -1,0 +1,44 @@
+@startuml
+!include _style.iuml
+left to right direction
+actor "Forensic\nExaminer" as ex
+actor "Auditor /\nReviewer" as au
+actor "Host OS" as os
+rectangle "Evidentia" {
+  usecase "Create case" as UC1
+  usecase "Add evidence\n(image or device)" as UC2
+  usecase "Make working copy" as UC3
+  usecase "Hash evidence\n(SHA-256 + MD5)" as UC4
+  usecase "Run file recovery" as UC5
+  usecase "Preview / export\nrecovered files" as UC6
+  usecase "Generate case report" as UC7
+  usecase "Sanitize media" as UC8
+  usecase "Two-step erase\nconfirmation" as UC9
+  usecase "Dry run (plan only)" as UC10
+  usecase "Issue signed\ncertificate" as UC11
+  usecase "Verify audit ledger" as UC12
+  usecase "Export chain head\nanchor" as UC13
+  usecase "Verify certificate" as UC14
+  usecase "Change settings" as UC15
+  usecase "List devices" as UC16
+}
+ex --> UC1
+ex --> UC2
+ex --> UC3
+ex --> UC5
+ex --> UC6
+ex --> UC7
+ex --> UC8
+ex --> UC15
+ex --> UC16
+au --> UC12
+au --> UC13
+au --> UC14
+UC2 ..> UC4 : <<include>>
+UC3 ..> UC4 : <<include>>
+UC5 ..> UC4 : <<include>>
+UC8 ..> UC9 : <<include>>
+UC8 ..> UC11 : <<include>>
+UC10 ..> UC8 : <<extend>>
+UC16 --> os
+@enduml

@@ -1,0 +1,46 @@
+@startuml
+!include _style.iuml
+|Examiner|
+start
+:Choose target, media type\nand method;
+:Untick "Dry run" and press\nERASE & VERIFY;
+|GUI|
+:Call begin_sanitize_confirmation();
+|Service|
+:Run safety gates\n(original evidence, system disk);
+if (Target allowed?) then (no)
+  :Raise SafetyError;
+  |GUI|
+  :Show refusal message;
+  stop
+else (yes)
+endif
+|GUI|
+:Show step 1 dialog\n(summary + warning);
+|Examiner|
+if (Yes, continue?) then (no)
+  |Ledger|
+  :Record sanitize.aborted;
+  stop
+else (yes)
+endif
+|Examiner|
+:Type CONFIRM in step 2;
+|GUI|
+if (Text matches exactly?) then (no)
+  |Ledger|
+  :Record step 2 failed;
+  stop
+else (yes)
+endif
+|Service|
+:sanitize(req, authorization);
+:Overwrite or purge target;
+:Read back and verify;
+:Build and sign certificate;
+|Ledger|
+:Record start, complete,\nverify, certificate.issue;
+|GUI|
+:Show PASS / FAIL and\ncertificate paths;
+stop
+@enduml

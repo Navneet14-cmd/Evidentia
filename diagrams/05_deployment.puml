@@ -1,0 +1,28 @@
+@startuml
+!include _style.iuml
+node "Examiner workstation (macOS / Linux)" as ws {
+  node "Python 3.12 runtime" as py {
+    artifact "evidentia package" as pkg
+    artifact "PySide6, pytsk3,\nreportlab, cryptography" as libs
+  }
+  folder "Workspace (~~/.evidentia)" as wsdir {
+    database "evidentia.db" as dbf
+    file "keys/ (Ed25519)" as kf
+    folder "cases/<case id>/" as cf
+  }
+  node "OS tools\n(diskutil / lsblk,\nhdparm, nvme-cli)" as ost
+}
+node "Evidence media" as med {
+  file "Disk image (.img)" as img
+  node "USB / SSD / NVMe\n(advanced mode only)" as disk
+}
+node "Public timestamp service\n(optional)" as ots
+pkg --> libs
+pkg --> dbf : SQLite
+pkg --> kf
+pkg --> cf : reports, certificates,\nrecovered files
+pkg --> img : read-only
+pkg --> disk : read-only /\nguarded erase
+pkg --> ost
+cf ..> ots : anchor.json\n(manual upload)
+@enduml
