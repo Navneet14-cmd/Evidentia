@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "evidentia"
+version = "0.1.0"
+description = "Digital forensics platform: file recovery + NIST SP 800-88 sanitization on a shared, tamper-evident forensic core"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["PySide6>=6.6", "pytsk3>=20231007", "reportlab>=4.0", "cryptography>=42", "filetype>=1.2", "Pillow>=10.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pyflakes"]
+
+[project.scripts]
+evidentia-cli = "evidentia.cli:main"
+
+[project.gui-scripts]
+evidentia = "evidentia.gui.app:main"
+
+[tool.setuptools.packages.find]
+include = ["evidentia*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning:reportlab.*"]

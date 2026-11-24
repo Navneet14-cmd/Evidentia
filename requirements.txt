@@ -1,0 +1,9 @@
+# Evidentia runtime dependencies (Python 3.11+; tested on 3.12, macOS arm64)
+PySide6>=6.6            # GUI (+ QtPdf for previews)
+pytsk3>=20231007        # The Sleuth Kit bindings: FAT / NTFS / ext / HFS+ / exFAT recovery
+reportlab>=4.0          # PDF case reports and certificates
+cryptography>=42        # Ed25519 signatures, ChaCha20 patterns, AES-CTR crypto-erase simulation
+filetype>=1.2           # content-based type detection fallback (pure Python, no libmagic needed)
+Pillow>=10.0            # image decoding for validation, thumbnails and test data
+# development / tests
+pytest>=8

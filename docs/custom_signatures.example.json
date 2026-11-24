@@ -1,0 +1,7 @@
+[
+  {"name": "bmp", "extensions": ["bmp"], "mime": "image/bmp", "header_hex": "424d", "footer_hex": null,
+   "max_size": 20000000, "family": "image", "description": "Windows bitmap (header only, max-size carving)"},
+  {"name": "sqlite", "extensions": ["sqlite", "db"], "mime": "application/vnd.sqlite3",
+   "header_hex": "53514c69746520666f726d6174203300", "footer_hex": null, "max_size": 50000000,
+   "family": "database", "description": "SQLite 3 database"}
+]
