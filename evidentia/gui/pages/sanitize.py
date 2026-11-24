@@ -30,7 +30,7 @@ class SanitizePage(QWidget):
         self.state = state
         self.last = None
         root = QHBoxLayout(self)
-        root.setContentsMargins(26, 18, 26, 18)
+        root.setContentsMargins(32, 14, 32, 18)
         split = QSplitter()
 
         form = QWidget()
@@ -116,7 +116,7 @@ class SanitizePage(QWidget):
             self.mbtn[mid] = rb
             row = QHBoxLayout()
             row.addWidget(rb)
-            row.addWidget(Pill(m.category.upper(), T.ACCENT if m.category == "Clear" else "#a855f7"))
+            row.addWidget(Pill(m.category.upper(), T.ACCENT2 if m.category == "Clear" else T.ACCENT))
             row.addStretch()
             c3.add(row)
         self.mdesc = label("", "muted", wrap=True)
@@ -295,7 +295,7 @@ class SanitizePage(QWidget):
         if not any(rb.isChecked() and rb.isEnabled() for rb in self.mbtn.values()) and first:
             first.setChecked(True)
         g = guidance(prof)
-        color = T.WARN if prof in ("SSD", "NVMe", "USB") else T.ACCENT
+        color = T.WARN if prof in ("SSD", "NVMe", "USB") else T.ACCENT2
         if g:
             self.guide.show_msg("<br>".join(g), color, "⚠" if color == T.WARN else "ℹ")
         else:

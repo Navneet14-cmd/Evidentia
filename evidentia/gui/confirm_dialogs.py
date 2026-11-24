@@ -64,7 +64,7 @@ class EraseConfirmDialog(QDialog):
         warn = QLabel(summary["warning"])
         warn.setObjectName("undoWarning")
         warn.setWordWrap(True)
-        warn.setStyleSheet(f"background: rgba(239,68,68,0.12); border: 1px solid {T.BAD}; border-radius: 8px;"
+        warn.setStyleSheet(f"background: {T.BAD_SOFT}; border: 1px solid {T.BAD}; border-left: 4px solid {T.BAD}; border-radius: 4px;"
                            f" padding: 10px; color: {T.TEXT}; font-weight: 600;")
         v.addWidget(warn)
         row, self.yes_btn, self.cancel_btn = _buttons("Yes, continue", self.accept, self.reject)

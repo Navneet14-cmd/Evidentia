@@ -15,7 +15,7 @@ class SettingsPage(QWidget):
         self.setObjectName("page")
         self.state = state
         v = QVBoxLayout(self)
-        v.setContentsMargins(26, 18, 26, 18)
+        v.setContentsMargins(32, 14, 32, 18)
         v.setSpacing(14)
         row = QHBoxLayout()
         row.setSpacing(14)

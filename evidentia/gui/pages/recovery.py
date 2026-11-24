@@ -119,7 +119,7 @@ class Preview(QStackedWidget):
         self.img.setFixedHeight(250)
         self.img.setStyleSheet(f"background: {T.SURFACE2}; border-radius: 8px;")
         self.text = QPlainTextEdit(readOnly=True)
-        self.text.setStyleSheet("font-family: Menlo, monospace; font-size: 11.5px;")
+        self.text.setStyleSheet(f"font-family: {T.MONO}; font-size: 11.5px; color: {T.SUBTLE};")
         self.addWidget(self.img)
         self.addWidget(self.text)
         self.setFixedHeight(250)
@@ -170,7 +170,7 @@ class RecoveryPage(QWidget):
         self.setObjectName("page")
         self.state = state
         v = QVBoxLayout(self)
-        v.setContentsMargins(26, 18, 26, 18)
+        v.setContentsMargins(32, 14, 32, 18)
         v.setSpacing(12)
 
         cfg = Card()

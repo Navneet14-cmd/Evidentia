@@ -63,38 +63,60 @@ class Card(QFrame):
 
 
 class StatCard(QFrame):
-    def __init__(self, caption: str, accent: str = T.ACCENT, parent=None):
+    """Metric card: a tinted icon tile beside an uppercase caption, a large value and a sub-line."""
+
+    def __init__(self, caption: str, accent: str = T.ACCENT, icon: str = "", parent=None):
         super().__init__(parent)
-        self.setObjectName("card")
+        self.setObjectName("statCard")
         self.accent = accent
-        lay = QVBoxLayout(self)
-        lay.setContentsMargins(18, 16, 18, 16)
+        outer = QHBoxLayout(self)
+        outer.setContentsMargins(18, 16, 18, 16)
+        outer.setSpacing(14)
+        self.tile = QLabel(icon)
+        self.tile.setObjectName("iconTile")
+        self.tile.setFixedSize(44, 44)
+        self.tile.setAlignment(Qt.AlignCenter)
+        self._paint_tile(accent)
+        outer.addWidget(self.tile, 0, Qt.AlignTop)
+        lay = QVBoxLayout()
         lay.setSpacing(2)
         self.value = label("–", "statValue")
         self.value.setStyleSheet(f"color: {accent};")
-        self.caption = label(caption, "statLabel")
-        self.sub = label("", "muted")
+        self.caption = label(caption.upper(), "statLabel")
+        self.sub = label("", "muted", wrap=True)
+        self.sub.setStyleSheet("font-size: 12px;")
         lay.addWidget(self.caption)
         lay.addWidget(self.value)
         lay.addWidget(self.sub)
-        self.setMinimumHeight(110)
+        outer.addLayout(lay, 1)
+        self.setMinimumHeight(112)
+
+    def _paint_tile(self, color: str):
+        self.tile.setStyleSheet(f"background: {rgba(color, 0.12)}; color: {color};")
 
     def set(self, value, sub: str = "", color: str | None = None):
         self.value.setText(str(value))
         self.sub.setText(sub)
         if color:
             self.value.setStyleSheet(f"color: {color};")
+            self._paint_tile(color)
 
 
 class Pill(QLabel):
-    def __init__(self, text="", color=T.ACCENT, parent=None):
-        super().__init__(text, parent)
-        self.set(text, color)
+    """Rounded status chip. Soft (tinted) by default; ``filled`` gives a solid chip with white text."""
 
-    def set(self, text, color):
+    def __init__(self, text="", color=T.ACCENT, parent=None, filled: bool = False):
+        super().__init__(text, parent)
+        self.set(text, color, filled)
+
+    def set(self, text, color, filled: bool = False):
         self.setText(text)
-        self.setStyleSheet(f"background: {rgba(color, 0.14)}; color: {color}; border: 1px solid {rgba(color, 0.45)}; border-radius: 10px;"
-                           f" padding: 2px 10px; font-weight: 700; font-size: 11.5px;")
+        if filled:
+            style = f"background: {color}; color: white; border: 1px solid {color};"
+        else:
+            style = f"background: {rgba(color, 0.10)}; color: {color}; border: 1px solid {rgba(color, 0.28)};"
+        self.setStyleSheet(style + " border-radius: 11px; padding: 3px 12px; font-weight: 700; font-size: 11.5px;"
+                           " letter-spacing: 0.4px;")
         self.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Fixed)
 
 
@@ -110,11 +132,13 @@ class Banner(QFrame):
         lay.addWidget(self.text, 1)
         self.hide()
 
-    def show_msg(self, text: str, color: str = T.ACCENT, icon: str = "ℹ"):
+    def show_msg(self, text: str, color: str = T.ACCENT2, icon: str = "ℹ"):
         self.icon.setText(icon)
-        self.icon.setStyleSheet(f"font-size: 18px; font-weight: 800; color: {color};")
+        self.icon.setStyleSheet(f"font-size: 18px; font-weight: 800; color: {color}; background: transparent;")
         self.text.setText(text)
-        self.setStyleSheet(f"Banner {{ background: {rgba(color, 0.12)}; border: 1px solid {rgba(color, 0.5)}; border-radius: 10px; }}")
+        self.text.setStyleSheet(f"color: {T.TEXT}; background: transparent;")
+        self.setStyleSheet(f"Banner {{ background: {rgba(color, 0.08)}; border: 1px solid {rgba(color, 0.30)};"
+                           f" border-left: 4px solid {color}; border-radius: 4px; }}")
         self.show()
 
 
@@ -181,7 +205,7 @@ class ConfidenceDelegate(QStyledItemDelegate):
         r = option.rect.adjusted(8, option.rect.height() // 2 - 5, -36, -(option.rect.height() // 2 - 5))
         path = QPainterPath()
         path.addRoundedRect(QRectF(r), 4, 4)
-        painter.fillPath(path, QColor(T.SURFACE2))
+        painter.fillPath(path, QColor(T.RAISED))
         fill = QRectF(r.x(), r.y(), r.width() * max(0, min(100, v)) / 100, r.height())
         p2 = QPainterPath()
         p2.addRoundedRect(fill, 4, 4)

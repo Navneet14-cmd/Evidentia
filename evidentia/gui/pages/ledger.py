@@ -28,14 +28,14 @@ class LedgerPage(QWidget):
         self.report = None
         self.demo_store: Store | None = None
         v = QVBoxLayout(self)
-        v.setContentsMargins(26, 18, 26, 18)
+        v.setContentsMargins(32, 14, 32, 18)
         v.setSpacing(12)
         bar = QHBoxLayout()
         bar.addWidget(button("✔  Verify ledger integrity", "primary", self.verify))
-        bar.addWidget(button("⚓  Export chain head for anchoring", None, self.anchor,
+        bar.addWidget(button("⚓  Export chain head", None, self.anchor,
                              "Signed JSON with head hash + Merkle root; publish it externally (OpenTimestamps, blockchain, email)"))
-        bar.addWidget(button("Verify against anchor file…", None, self.verify_anchor))
-        bar.addWidget(button("🧪  Tamper demo (on a copy)", None, self.tamper_demo,
+        bar.addWidget(button("Verify against anchor…", None, self.verify_anchor))
+        bar.addWidget(button("🧪  Tamper demo (copy)", None, self.tamper_demo,
                              "Copies the ledger database, edits one entry like an attacker would, then verifies the copy"))
         self.back = button("← Back to live ledger", None, self.leave_demo)
         self.back.hide()
@@ -62,7 +62,7 @@ class LedgerPage(QWidget):
         split.addWidget(self.table)
         det = Card("Entry detail")
         self.detail = QPlainTextEdit(readOnly=True)
-        self.detail.setStyleSheet("font-family: Menlo, monospace; font-size: 11.5px;")
+        self.detail.setStyleSheet(f"font-family: {T.MONO}; font-size: 11.5px; color: {T.SUBTLE};")
         det.add(self.detail)
         split.addWidget(det)
         split.setSizes([560, 220])
@@ -95,7 +95,8 @@ class LedgerPage(QWidget):
                 if c in (6, 7):
                     it.setForeground(QColor(T.MUTED))
                 if e["seq"] in bad:
-                    it.setBackground(QColor("#4c1d24"))
+                    it.setBackground(QColor(T.BAD_SOFT))
+                    it.setForeground(QColor(T.BAD))
                     it.setToolTip(bad[e["seq"]].message)
                 elif self.report and self.report.ok:
                     if c == 0:

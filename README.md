@@ -11,7 +11,7 @@ tamper-evident forensic core.** Hackathon prototype for SIH problem 26149 (Block
 | **Sanitization** | NIST SP 800-88 Rev. 2 Clear (zero / random / multi-pass) and Purge (ATA Secure Erase, NVMe Sanitize block/crypto, cryptographic erase; simulated on images, guarded commands on devices). Works on whole images/devices, partitions, or files/folders, with HDD vs SSD/NVMe/USB guidance, sample or full read-back verification, and Ed25519-signed certificates (PDF + JSON) |
 | **Forensic core** | Cases, evidence, examiners and notes; chain of custody for every action; an append-only, hash-chained, signed **audit ledger** with pinpoint tamper detection and an exportable chain-head anchor; SHA-256 + MD5 of evidence before and after work and of every recovered file; PDF/HTML case reports |
 
-The GUI (PySide6, dark dashboard) and the CLI are thin layers over the same `forensic.service.Evidentia`
+The GUI (PySide6, light dashboard: terracotta primary, slate sidebar) and the CLI are thin layers over the same `forensic.service.Evidentia`
 facade, so every action from either one is recorded in the same ledger.
 
 ---

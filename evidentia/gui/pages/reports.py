@@ -25,7 +25,7 @@ class ReportsPage(QWidget):
         self.setObjectName("page")
         self.state = state
         v = QVBoxLayout(self)
-        v.setContentsMargins(26, 18, 26, 18)
+        v.setContentsMargins(32, 14, 32, 18)
         v.setSpacing(12)
         bar = QHBoxLayout()
         bar.addWidget(button("▦  Generate case report (PDF + HTML)", "primary", self.generate))

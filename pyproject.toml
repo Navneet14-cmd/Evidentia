@@ -22,6 +22,9 @@ evidentia = "evidentia.gui.app:main"
 [tool.setuptools.packages.find]
 include = ["evidentia*"]
 
+[tool.setuptools.package-data]
+"evidentia.gui" = ["assets/*.svg"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"

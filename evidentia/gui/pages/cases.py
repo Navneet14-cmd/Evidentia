@@ -43,7 +43,7 @@ class CasesPage(QWidget):
         self.setObjectName("page")
         self.state = state
         root = QHBoxLayout(self)
-        root.setContentsMargins(26, 22, 26, 22)
+        root.setContentsMargins(32, 14, 32, 18)
         split = QSplitter()
         left = Card("Cases")
         self.list = QListWidget()

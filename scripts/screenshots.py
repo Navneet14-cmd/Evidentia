@@ -11,13 +11,12 @@ import time
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PySide6.QtGui import QFont  # noqa: E402
 from PySide6.QtWidgets import QApplication, QInputDialog, QMessageBox  # noqa: E402
 
 from evidentia.forensic.service import Evidentia  # noqa: E402
 from evidentia.gui.main_window import MainWindow  # noqa: E402
 from evidentia.gui.state import AppState  # noqa: E402
-from evidentia.gui.theme import QSS  # noqa: E402
+from evidentia.gui import theme  # noqa: E402
 
 
 def pump(app, secs=0.3):
@@ -30,11 +29,7 @@ def pump(app, secs=0.3):
 def main(home, out):
     os.makedirs(out, exist_ok=True)
     app = QApplication([])
-    app.setStyle("Fusion")
-    f = QFont()
-    f.setPointSize(13)
-    app.setFont(f)
-    app.setStyleSheet(QSS)
+    theme.apply(app)
     QMessageBox.information = staticmethod(lambda *a, **k: QMessageBox.Ok)
     QMessageBox.warning = staticmethod(lambda *a, **k: QMessageBox.Yes)
     st = AppState(Evidentia(home))
