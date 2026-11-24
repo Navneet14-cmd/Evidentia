@@ -1,0 +1,22 @@
+@startuml
+!include _style.iuml
+hide empty description
+[*] --> New : begin_sanitize_confirmation()
+New --> Shown : show()\n/ log confirm.shown
+Shown --> ConfirmedYes : answer(yes)
+Shown --> Aborted : answer(cancel)\nEsc / close
+ConfirmedYes --> Authorized : submit("CONFIRM")
+ConfirmedYes --> Aborted : submit(other text)\nor cancel
+Aborted --> [*]
+
+state Authorized {
+  [*] --> TokenValid
+  TokenValid --> TokenUsed : engine.consume(req)
+  TokenValid --> TokenExpired : after 10 minutes
+  TokenValid --> TokenRejected : request changed
+  TokenUsed --> [*]
+  TokenExpired --> [*]
+  TokenRejected --> [*]
+}
+Authorized --> [*]
+@enduml

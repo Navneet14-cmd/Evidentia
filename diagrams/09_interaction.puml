@@ -1,0 +1,26 @@
+@startuml
+!include _style.iuml
+start
+:ref: Create case; <<procedure>>
+:ref: Add evidence and hash it; <<procedure>>
+:ref: Make working copy; <<procedure>>
+if (Examiner goal?) then (recover data)
+  :ref: Run recovery (see sequence diagram); <<procedure>>
+  :ref: Review and export files; <<procedure>>
+else (sanitize media)
+  if (Dry run?) then (yes)
+    :ref: Show erase plan; <<procedure>>
+  else (no)
+    :ref: Two-step confirmation; <<procedure>>
+    if (Authorized?) then (yes)
+      :ref: Overwrite / purge and verify; <<procedure>>
+      :ref: Issue signed certificate; <<procedure>>
+    else (no)
+      :ref: Log sanitize.aborted; <<procedure>>
+    endif
+  endif
+endif
+:ref: Generate case report; <<procedure>>
+:ref: Verify ledger and export anchor; <<procedure>>
+stop
+@enduml

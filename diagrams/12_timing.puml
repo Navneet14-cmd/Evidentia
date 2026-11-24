@@ -1,0 +1,51 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam dpi 150
+scale 1 as 70 pixels
+concise "Operator" as OP
+robust "Confirmation" as CS
+robust "Sanitize engine" as EN
+concise "Target medium" as MD
+
+@0
+OP is Reviewing
+CS is new
+EN is idle
+MD is "original data"
+
+@1
+CS is shown
+
+@3
+OP is Typing
+CS is confirmed_yes
+
+@4
+OP is Waiting
+CS is authorized
+
+@5
+EN is resolving
+
+@6
+EN is writing
+MD is "being overwritten"
+
+@11
+EN is verifying
+MD is overwritten
+
+@13
+EN is certifying
+
+@14
+EN is idle
+CS is used
+OP is Reviewing
+MD is "sanitized (PASS)"
+
+@16
+@enduml

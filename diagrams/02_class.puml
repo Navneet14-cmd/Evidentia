@@ -1,0 +1,162 @@
+@startuml
+!include _style.iuml
+hide circle
+skinparam classAttributeIconSize 0
+class Evidentia {
+  home : Path
+  settings : Settings
+  create_case(title) : dict
+  add_evidence(case_id, path) : dict
+  make_working_copy(evidence_id) : dict
+  run_recovery(evidence_id, options) : dict
+  begin_sanitize_confirmation(req)
+  sanitize(req, authorization) : dict
+  verify_ledger(anchor) : VerifyReport
+  export_anchor(path) : tuple
+  generate_report(case_id) : dict
+}
+class Settings {
+  examiner_name : str
+  examiner_org : str
+  advanced_device_access : bool
+  load()
+  save()
+}
+class Store {
+  path : str
+  query(sql) : list
+  insert(table, row) : int
+  update(table, key, row)
+}
+class Ledger {
+  append(actor, action) : dict
+  entries(case_id) : list
+  head() : tuple
+  verify(anchor) : VerifyReport
+  build_anchor() : dict
+}
+class Signer {
+  sign(data) : str
+  public_b64() : str
+  fingerprint() : str
+}
+class VerifyReport {
+  ok : bool
+  checked : int
+  tampered_seqs() : list
+}
+class Issue {
+  seq : int
+  kind : str
+  message : str
+}
+class EvidenceSource {
+  path : str
+  size : int
+  is_device : bool
+  read(offset, size) : bytes
+  close()
+}
+class JobContext {
+  progress(fraction, msg)
+  log(msg)
+  check()
+  sub(start, end)
+}
+class RecoveryEngine {
+  run(source, out_dir, ctx)
+}
+class RecoveryOptions {
+  filesystem : bool
+  carving : bool
+  reconstruct : bool
+  unallocated_only : bool
+}
+class RecoveryResult {
+  stats : dict
+  partitions : list
+  warnings : list
+}
+class RecoveredItem {
+  item_id : int
+  source : str
+  name : str
+  offset : int
+  size : int
+  fragmentation : str
+}
+class Classification {
+  type : str
+  mime : str
+  ext_mismatch : bool
+}
+class ValidationResult {
+  status : str
+  length : int
+  reasons : list
+}
+class ScoreResult {
+  total : int
+  parts : dict
+  grade() : str
+}
+class SanitizeEngine {
+  resolve(req) : tuple
+  run(req, ctx, authorization)
+}
+class Request {
+  method : str
+  media_profile : str
+  verify_mode : str
+  dry_run : bool
+}
+class Target {
+  kind : str
+  path : str
+  offset : int
+  length : int
+}
+class Result {
+  nist_category : str
+  bytes_written : int
+  verification : dict
+  success : bool
+}
+class ConfirmationSession {
+  session_id : str
+  state : str
+  show() : dict
+  answer(yes) : bool
+  submit(typed) : bool
+}
+class ErasureAuthorization {
+  session_id : str
+  check(req)
+  consume(req)
+}
+
+Evidentia *-- Settings
+Evidentia *-- Store
+Evidentia *-- Ledger
+Evidentia *-- Signer
+Ledger --> Store
+Ledger --> Signer
+Ledger ..> VerifyReport : creates
+VerifyReport "1" o-- "*" Issue
+Evidentia ..> EvidenceSource : opens
+Evidentia ..> RecoveryEngine : uses
+Evidentia ..> SanitizeEngine : uses
+RecoveryEngine --> RecoveryOptions
+RecoveryEngine ..> RecoveryResult : returns
+RecoveryResult "1" *-- "*" RecoveredItem
+RecoveredItem --> Classification
+RecoveredItem --> ValidationResult
+RecoveredItem --> ScoreResult
+RecoveryEngine ..> JobContext
+SanitizeEngine ..> JobContext
+SanitizeEngine ..> Request
+SanitizeEngine ..> Result : returns
+Request *-- Target
+ConfirmationSession --> Request
+ConfirmationSession "1" --> "0..1" ErasureAuthorization : issues
+@enduml

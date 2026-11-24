@@ -1,0 +1,21 @@
+@startuml
+!include _style.iuml
+allowmixing
+left to right direction
+actor Auditor
+object ":LedgerPage" as page
+object ":Evidentia" as svc
+object ":Ledger" as led
+object ":Store" as db
+object ":Signer" as sig
+object ":VerifyReport" as rep
+
+Auditor --> page : 1: verify()
+page --> svc : 2: verify_ledger(anchor)
+svc --> led : 3: verify(anchor, public key)
+led --> db : 4: SELECT * FROM ledger ORDER BY seq
+led --> sig : 5*: check signature of each entry_hash
+led --> rep : 6: create (ok, issues)
+svc --> led : 7: append("ledger.verify")
+page --> rep : 8: tampered_seqs()
+@enduml

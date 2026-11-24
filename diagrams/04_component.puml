@@ -1,0 +1,59 @@
+@startuml
+!include _style.iuml
+package "User interfaces" {
+  [Desktop GUI\n(PySide6)] as gui
+  [Command line\n(cli.py)] as cli
+}
+package "Forensic core" {
+  [Service facade\n(Evidentia)] as svc
+  [Audit ledger] as led
+  [Case store\n(SQLite)] as db
+  [Key manager\n(Ed25519)] as keys
+  [Report generator] as rep
+}
+package "Recovery" {
+  [FS recovery] as fs
+  [Carver] as carv
+  [Validators] as val
+  [Fragment\nreconstruction] as frag
+  [Classifier +\nscoring] as score
+}
+package "Sanitization" {
+  [Sanitize engine] as san
+  [Confirmation] as conf
+  [Certificates] as cert
+  [Media profiles] as media
+}
+package "Core" {
+  [EvidenceSource\n(read-only)] as src
+  [Hashing /\nentropy] as hash
+  [Device policy] as dev
+}
+[pytsk3] as tsk
+[reportlab] as rl
+gui --> svc
+cli --> svc
+svc --> led
+svc --> db
+svc --> rep
+led --> db
+led --> keys
+cert --> keys
+svc --> fs
+svc --> carv
+carv --> val
+carv --> frag
+fs --> score
+svc --> san
+san --> conf
+san --> cert
+san --> media
+fs --> src
+carv --> src
+svc --> hash
+san --> dev
+src --> dev
+fs --> tsk
+rep --> rl
+cert --> rl
+@enduml
